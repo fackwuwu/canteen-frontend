@@ -9,11 +9,21 @@ const BackHeader = ({ title, RightComponent }) => {
     navigate(-1);
   }
   return (
-    <div className="sticky z-10 top-0 border-b border-gray-300 bg-white shadow-sm">
-      <div className='grid grid-cols-3 items-center max-w-[1400px] w-full mx-auto  px-4 justify-between'>
-        <button onClick={handleClickBack} className="flex gap-2 sm:py-6 py-3 text-gray-700 [justify-self:left] hover:text-black cursor-pointer"><ChevronLeft /> Back</button>
-        <div className='text-center font-semibold text-lg'>{title}</div>
-        {RightComponent}
+    <div className="sticky z-50 top-0 glass border-b border-white/10 shadow-2xl backdrop-blur-xl">
+      <div className='grid grid-cols-3 items-center max-w-[1400px] w-full mx-auto px-6 py-4 justify-between'>
+        <button
+          onClick={handleClickBack}
+          className="flex items-center gap-1 text-text-muted hover:text-primary transition-colors cursor-pointer group w-fit"
+        >
+          <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <span className="font-medium">Back</span>
+        </button>
+        <div className='text-center font-black text-2xl tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent'>
+          {title}
+        </div>
+        <div className="flex justify-end">
+          {RightComponent}
+        </div>
       </div>
     </div>
   )

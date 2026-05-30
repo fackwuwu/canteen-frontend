@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import  { useRegister } from "../../hooks/AuthHook.jsx";
 import toast from "react-hot-toast";
 import { formatedError } from "../../utils/errorHandler.jsx";
+import { motion } from "framer-motion";
 
 const registerSchema = z
   .object({
@@ -46,168 +47,187 @@ export default function RegisterForm() {
   };
   
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#FFF4E6] px-4 py-12">
-      <div className="w-full max-w-md rounded-2xl bg-white p-10 shadow-lg">
-  
+    <div className="flex min-h-screen items-center justify-center px-4 py-12 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-full h-full -z-10">
+        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-secondary/20 rounded-full blur-[120px]" />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-md rounded-3xl glass p-10 shadow-2xl border border-white/10"
+      >
         {/* Header */}
-        <div className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-orange-500 text-white">
-            <User className="h-6 w-6" />
-          </div>
-  
-          <h2 className="text-2xl font-bold text-gray-900">
-            Create Account
-          </h2>
-          <p className="mt-1 text-sm text-gray-500">
-            Register to start ordering
-          </p>
-        </div>
-  
-        {/* Form */}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-  
-          {/* Full Name */}
+        <div className="text-center space-y-4">
+          <motion.div
+            initial={{ rotate: 20, scale: 0 }}
+            animate={{ rotate: 0, scale: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-secondary to-primary text-white shadow-lg shadow-secondary/30"
+          >
+            <User className="h-10 w-10" />
+          </motion.div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <h2 className="text-4xl font-black tracking-tight text-text">
+              Join Us
+            </h2>
+            <p className="mt-2 text-text-muted">
+              Create an account to start your feast
+            </p>
+          </div>
+        </div>
+
+        {/* Form */}
+        <form className="mt-10 space-y-5" onSubmit={handleSubmit(onSubmit)}>
+
+          {/* Full Name */}
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-text ml-1 uppercase tracking-wider opacity-70">
               Full Name
             </label>
-            <div className="relative mt-2">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <User className="h-5 w-5 text-orange-400" />
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-4 transition-colors group-focus-within:text-primary text-text-muted">
+                <User className="h-5 w-5" />
               </div>
               <input
                 {...register("name")}
                 placeholder="Enter your name"
-                className={`w-full rounded-md py-3 pl-10 text-sm outline-none ring-1 transition
+                className={`w-full glass rounded-2xl py-4 pl-12 pr-4 text-sm outline-none transition-all
                   ${
                     errors.name
-                      ? "ring-red-500 bg-red-50"
-                      : "ring-gray-300 focus:ring-orange-500"
+                      ? "ring-2 ring-red-500/50 bg-red-500/5"
+                      : "ring-1 ring-white/10 focus:ring-2 focus:ring-primary/50"
                   }`}
               />
             </div>
             {errors.name && (
-              <p className="mt-1 text-xs text-red-600">
+              <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-xs font-medium text-red-400 ml-1">
                 {errors.name.message}
-              </p>
+              </motion.p>
             )}
           </div>
   
           {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-text ml-1 uppercase tracking-wider opacity-70">
+              Email Address
             </label>
-            <div className="relative mt-2">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <Mail className="h-5 w-5 text-orange-400" />
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-4 transition-colors group-focus-within:text-primary text-text-muted">
+                <Mail className="h-5 w-5" />
               </div>
               <input
                 {...register("email")}
                 type="email"
                 placeholder="Enter your email"
-                className={`w-full rounded-md py-3 pl-10 text-sm outline-none ring-1 transition
+                className={`w-full glass rounded-2xl py-4 pl-12 pr-4 text-sm outline-none transition-all
                   ${
                     errors.email
-                      ? "ring-red-500 bg-red-50"
-                      : "ring-gray-300 focus:ring-orange-500"
+                      ? "ring-2 ring-red-500/50 bg-red-500/5"
+                      : "ring-1 ring-white/10 focus:ring-2 focus:ring-primary/50"
                   }`}
               />
             </div>
             {errors.email && (
-              <p className="mt-1 text-xs text-red-600">
+              <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-xs font-medium text-red-400 ml-1">
                 {errors.email.message}
-              </p>
+              </motion.p>
             )}
           </div>
   
           {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-text ml-1 uppercase tracking-wider opacity-70">
               Password
             </label>
-            <div className="relative mt-2">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <Lock className="h-5 w-5 text-orange-400" />
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-4 transition-colors group-focus-within:text-primary text-text-muted">
+                <Lock className="h-5 w-5" />
               </div>
               <input
                 {...register("password")}
                 type="password"
                 placeholder="Create a password"
-                className={`w-full rounded-md py-3 pl-10 text-sm outline-none ring-1 transition
+                className={`w-full glass rounded-2xl py-4 pl-12 pr-4 text-sm outline-none transition-all
                   ${
                     errors.password
-                      ? "ring-red-500 bg-red-50"
-                      : "ring-gray-300 focus:ring-orange-500"
+                      ? "ring-2 ring-red-500/50 bg-red-500/5"
+                      : "ring-1 ring-white/10 focus:ring-2 focus:ring-primary/50"
                   }`}
               />
             </div>
             {errors.password && (
-              <p className="mt-1 text-xs text-red-600">
+              <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-xs font-medium text-red-400 ml-1">
                 {errors.password.message}
-              </p>
+              </motion.p>
             )}
           </div>
   
           {/* Confirm Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-text ml-1 uppercase tracking-wider opacity-70">
               Confirm Password
             </label>
-            <div className="relative mt-2">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <Lock className="h-5 w-5 text-orange-400" />
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-4 transition-colors group-focus-within:text-primary text-text-muted">
+                <Lock className="h-5 w-5" />
               </div>
               <input
                 {...register("confirmPassword")}
                 type="password"
                 placeholder="Confirm password"
-                className={`w-full rounded-md py-3 pl-10 text-sm outline-none ring-1 transition
+                className={`w-full glass rounded-2xl py-4 pl-12 pr-4 text-sm outline-none transition-all
                   ${
                     errors.confirmPassword
-                      ? "ring-red-500 bg-red-50"
-                      : "ring-gray-300 focus:ring-orange-500"
+                      ? "ring-2 ring-red-500/50 bg-red-500/5"
+                      : "ring-1 ring-white/10 focus:ring-2 focus:ring-primary/50"
                   }`}
               />
             </div>
             {errors.confirmPassword && (
-              <p className="mt-1 text-xs text-red-600">
+              <motion.p initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="text-xs font-medium text-red-400 ml-1">
                 {errors.confirmPassword.message}
-              </p>
+              </motion.p>
             )}
           </div>
   
           {/* Submit Button */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={isRegistering}
-            className="flex w-full items-center justify-center gap-2 rounded-md bg-orange-500 py-3 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:opacity-70"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-secondary py-4 text-sm font-black uppercase tracking-widest text-white shadow-xl shadow-secondary/20 transition-all hover:bg-secondary/90 disabled:opacity-70 glow"
           >
             {isRegistering ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Creating account...
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Creating...
               </>
             ) : (
               <>
-                Register
-                <ArrowRight className="h-4 w-4" />
+                Get Started
+                <ArrowRight className="h-5 w-5" />
               </>
             )}
-          </button>
+          </motion.button>
         </form>
   
         {/* Footer */}
-        <p className="mt-8 text-center text-sm text-gray-500">
-          Already have an account?{" "}
-          <Link
-            to="/"
-            className="font-semibold text-orange-500 hover:underline"
-          >
-            Login
-          </Link>
-        </p>
-      </div>
+        <div className="mt-8 text-center">
+          <p className="text-sm text-text-muted">
+            Already have an account?{" "}
+            <Link
+              to="/"
+              className="font-black text-secondary hover:text-secondary/80 transition-colors"
+            >
+              Log In
+            </Link>
+          </p>
+        </div>
+      </motion.div>
     </div>
   );
   
