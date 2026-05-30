@@ -9,9 +9,9 @@ const Layout = ({ children }) => {
   console.log(location.pathname)
   if (authRoutes.some((r) => r === location.pathname)) return children;
   return (
-    <div className='flex min-h-screen'>
-      <div className="flex flex-col w-full">
-        <main className='bg-gray-50 w-full h-screen'>
+    <div className='flex min-h-screen bg-background selection:bg-primary selection:text-white'>
+      <div className="flex flex-col w-full relative">
+        <main className='w-full min-h-screen overflow-x-hidden'>
           {children}
         </main>
       </div>

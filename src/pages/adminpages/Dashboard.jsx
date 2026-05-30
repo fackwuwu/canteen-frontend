@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react'
 import { useGetUser } from '../../hooks/AuthHook';
-import { History, ListOrdered, ShoppingBag, UtensilsCrossed, UtensilsCrossedIcon } from 'lucide-react';
+import { History, ListOrdered, ShoppingBag, UtensilsCrossed, UtensilsCrossedIcon, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/layout/Header';
 import { Statics } from "../../constants/DashboardStatics";
 import { useGetAllOrders } from '../../hooks/adminHook';
+import { motion } from 'framer-motion';
 
 
 const Dashboard = () => {
@@ -23,45 +24,73 @@ const Dashboard = () => {
       },[orders, isLoading]);
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col min-h-screen'>
       <Header />
-      <div className="p-6 w-full max-w-[1400px] mx-auto">
-        <div className="p-4 rounded-xl w-full bg-white border border-gray-200">
-          <p className='font-semibold text-lg'> Welcome, {data?.user?.name}</p>
-          <p className="text-gray-600 mt-4"> {isAdmin ? "Manage orders and menu from your dashboard" : "Ready to order delicious food? Check out our menu and place your order!"} </p>
+      <div className="p-6 w-full max-w-[1400px] mx-auto space-y-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-8 rounded-3xl w-full glass border border-white/10 shadow-2xl relative overflow-hidden group"
+        >
+          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+            <Sparkles className="w-24 h-24 text-primary" />
+          </div>
+          <h1 className='font-black text-4xl tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2'>
+            Welcome back, {data?.user?.name}!
+          </h1>
+          <p className="text-text-muted text-lg max-w-2xl">
+            {isAdmin ? "Your canteen operations are running smoothly. Here's your overview for today." : "Hungry? We've got fresh meals waiting for you. Explore the menu and satisfy your cravings!"}
+          </p>
+        </motion.div>
+
+        {isAdmin && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="grid gap-6 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1"
+          >
+            {Statics.map((item, index) => (
+              <StaticsCard
+                key={item.heading}
+                heading={item.heading}
+                statics={statics[item.for.toLowerCase()] ?? 0}
+                icon={item.icon}
+                index={index}
+              />
+            ))}
+          </motion.div>
+        )}
+
+        <div className="grid gap-6 sm:grid-cols-2 grid-cols-1">
+          {(isAdmin ? cardDataAdmin : cardData).map((item, index) => (
+            <Card key={item.label} data={item} index={index} />
+          ))}
         </div>
 
-        {isAdmin ?
-          <>
-            <div className="grid mt-6 gap-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 ">
-              {
-                Statics.map((item) => (
-                  <StaticsCard key={item.heading} heading={item.heading} statics={statics[item.for.toLowerCase()] ?? 0} icon={item.icon} />
-                ))
-              }
+        {!isAdmin && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4 }}
+            className="flex items-center gap-6 rounded-3xl p-10 justify-center flex-col glass border border-white/10 shadow-2xl text-center relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 -z-10" />
+            <div className="p-4 bg-primary/10 rounded-full">
+              <ShoppingBag className="w-12 h-12 text-primary" />
             </div>
-          </>
-          :
-          null
-        }
-        <div className="grid mt-6 gap-4  sm:grid-cols-2 grid-cols-1 ">
-          {isAdmin ?
-            cardDataAdmin.map((item) => (
-              <Card key={item.label} data={item} />
-            ))
-            :
-            cardData.map((item) => (
-              <Card key={item.label} data={item} />
-            ))
-          }
-        </div>
-
-        <div className="flex items-center gap-4 mt-6 rounded-lg p-6 justify-center flex-col bg-white border border-gray-200 ">
-          <ShoppingBag className="w-12 h-12 text-gray-400" />
-          <p className="font-semibold text-xl">Ready to Order?</p>
-          <p className="text-gray-700">Browse our delicious menu and place your order</p>
-          <button onClick={() => navigate("/menu")} className="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg">View Menu</button>
-        </div>
+            <div className="space-y-2">
+              <h2 className="font-black text-3xl">Ready to Order?</h2>
+              <p className="text-text-muted text-lg">Browse our delicious menu and place your order in seconds.</p>
+            </div>
+            <button
+              onClick={() => navigate("/menu")}
+              className="cursor-pointer bg-primary hover:bg-primary/90 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95 glow"
+            >
+              Explore Menu
+            </button>
+          </motion.div>
+        )}
       </div>
     </div>
 
@@ -71,18 +100,22 @@ const Dashboard = () => {
 export default Dashboard
 
 
-const StaticsCard = ({ heading, statics, icon }) => {
-
+const StaticsCard = ({ heading, statics, icon, index }) => {
   return (
-    <div className="p-4 bg-white rounded-lg w-full flex items-center border border-gray-300">
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.1 * index }}
+      className="p-6 glass rounded-3xl w-full flex items-center border border-white/5 shadow-xl hover:border-primary/30 transition-all group"
+    >
       <div className="flex flex-col">
-        <p className="text-gray-500">{heading}</p>
-        <span className="text-3xl mt-2">{statics}</span>
+        <p className="text-text-muted font-medium uppercase tracking-wider text-xs mb-1">{heading}</p>
+        <span className="text-4xl font-black text-text">{statics}</span>
       </div>
-      <div className="ml-auto">
-        <icon.icon className={`size-10 text-${icon.color}-500`} />
+      <div className={`ml-auto p-4 rounded-2xl bg-${icon.color}-500/10 group-hover:scale-110 transition-transform`}>
+        <icon.icon className={`size-8 text-${icon.color}-500`} />
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -117,7 +150,7 @@ const cardData = [
 ]
 
 
-const Card = ({ data }) => {
+const Card = ({ data, index }) => {
 
   const { icon, label, description, link } = data;
   const navigate = useNavigate();
@@ -127,16 +160,20 @@ const Card = ({ data }) => {
   }
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3 + (0.1 * index) }}
       onClick={handleNavigate}
-      className="flex rounded-lg gap-4 items-center border p-4 bg-white border-gray-300 cursor-pointer hover:shadow-lg">
-      <div className="">
+      className="flex rounded-3xl gap-6 items-center p-6 glass border border-white/5 cursor-pointer hover:shadow-2xl hover:border-primary/30 transition-all group"
+    >
+      <div className="group-hover:scale-110 transition-transform duration-300">
         {icon}
       </div>
       <div className="flex flex-col">
-        <p className="font-semibold">{label}</p>
-        <p className="text-gray-600">{description}</p>
+        <p className="font-black text-xl group-hover:text-primary transition-colors">{label}</p>
+        <p className="text-text-muted">{description}</p>
       </div>
-    </div>
+    </motion.div>
   )
 }
